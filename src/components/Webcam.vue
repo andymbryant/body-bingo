@@ -1,6 +1,6 @@
 <template>
   <div id='webcam-view'>
-    <video id="webcam" ref='webcam' width='400' height='400' muted autoplay></video>
+    <video id="webcam" ref='webcam' width='350' height='350' muted autoplay></video>
     <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button>
   </div>
 </template>
@@ -42,10 +42,11 @@ export default {
       const mod = await posenet.load({
         architecture: 'ResNet50',
         outputStride: 32,
-        inputResolution: { width: 400, height: 400 },
+        inputResolution: { width: 350, height: 350 },
         quantBytes: 2,
       });
       model = mod;
+      this.$emit('update-model-ready', true);
     },
     async estimatePoseOnImage(element) {
       const pose = await model.estimateSinglePose(element, {
@@ -88,19 +89,16 @@ export default {
 <style scoped>
 #webcam-view {
   position: relative;
-  border: 1px solid black;
-}
-#webcam {
-  height: 400px;
-  width: 400px;
+  width: 350px;
 }
 
 #webcam-button {
   position: absolute;
-  top: 120px;
-  left: 150px;
+  top: 115px;
+  left: 125px;
   width: 100px;
   height: 75px;
+  background-color: lightgreen;
 }
 
 </style>

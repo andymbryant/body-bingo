@@ -12,9 +12,11 @@
         <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button>
       </div>
+      <div v-if='!isModelReady'>(loading model...)</div>
     </div>
     <Webcam
       ref='webcam'
+      @update-model-ready='updateModelReady'
       :isGamePaused='isGamePaused'
       @update-webcam-ready='updateWebcamReady'
       @update-pose='updatePose'
@@ -45,6 +47,7 @@ export default {
       isGameActive: false,
       isGamePaused: false,
       isWebcamReady: false,
+      isModelReady: false,
       actions: [],
     };
   },
@@ -75,6 +78,9 @@ export default {
     updateWebcamReady(bool) {
       this.isWebcamReady = bool;
     },
+    updateModelReady(bool) {
+      this.isModelReady = bool;
+    },
     gameAction() {
       if (this.isGameActive) {
         this.pause();
@@ -98,9 +104,9 @@ export default {
     actionData() {
       const actionData = [
         {
-          name: 'Touch Elbows Together',
-          partOneName: 'leftElbow',
-          partTwoName: 'rightElbow',
+          name: 'Touch Right Wrist to Right Ear',
+          partOneName: 'rightWrist',
+          partTwoName: 'rightEar',
           actionType: 'connect',
         },
         {
