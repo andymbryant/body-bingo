@@ -1,6 +1,6 @@
 <template>
   <div id='webcam-view'>
-    <video id="webcam" ref='webcam' width='420' height='350' muted autoplay></video>
+    <video id="webcam" ref='webcam' width='400' height='400' muted autoplay></video>
     <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button>
   </div>
 </template>
@@ -29,16 +29,26 @@ export default {
     };
   },
   methods: {
+    async init() {
+      await this.bindVideo();
+      await this.loadModel();
+    },
     async bindVideo() {
       setTimeout(() => {
         this.video = this.$refs.webcam;
       }, 100);
     },
+    async loadModel() {
+      const mod = await posenet.load({
+        architecture: 'ResNet50',
+        outputStride: 32,
+        inputResolution: { width: 400, height: 400 },
+        quantBytes: 2,
+      });
+      model = mod;
+    },
     async estimatePoseOnImage(element) {
-      // load the posenet model from a checkpoint
-      const net = await posenet.load();
-
-      const pose = await net.estimateSinglePose(element, {
+      const pose = await model.estimateSinglePose(element, {
         flipHorizontal: false,
       });
       return pose;
@@ -69,7 +79,7 @@ export default {
     this.loading = true;
   },
   mounted() {
-    this.bindVideo()
+    this.init()
       .then(() => this.loading = false);
   },
 };
@@ -81,7 +91,7 @@ export default {
   border: 1px solid black;
 }
 #webcam {
-  height: 300px;
+  height: 400px;
   width: 400px;
 }
 

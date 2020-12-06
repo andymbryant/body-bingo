@@ -98,27 +98,27 @@ export default {
     actionData() {
       const actionData = [
         {
-          name: 'Touch Elbows',
+          name: 'Touch Elbows Together',
           partOneName: 'leftElbow',
           partTwoName: 'rightElbow',
           actionType: 'connect',
         },
         {
-          name: 'Touch Left Wrist to Right Shoulder',
-          partOneName: 'rightWrist',
-          partTwoName: 'leftShoulder',
+          name: 'Touch Left Wrist to Nose',
+          partOneName: 'leftWrist',
+          partTwoName: 'nose',
           actionType: 'connect',
         },
         {
-          name: 'Dab!',
+          name: 'Dab with Right Arm',
           partOneName: 'rightElbow',
           partTwoName: 'rightEye',
           actionType: 'connect',
         },
         {
-          name: 'Touch Knees',
-          partOneName: 'rightKnee',
-          partTwoName: 'leftKnee',
+          name: 'Dab with Left Arm',
+          partOneName: 'leftElbow',
+          partTwoName: 'leftEye',
           actionType: 'connect',
         },
       ];

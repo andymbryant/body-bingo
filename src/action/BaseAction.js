@@ -12,7 +12,11 @@ export default class BaseAction {
   }
 
   isPartVisible(part) {
-    return part.position.x > 0 && part.position.y > 0;
+    if (this.partOneName === 'rightKnee') {
+      console.log(`X: ${part.position.x}, Y: ${part.position.y}`);
+    }
+    const { x, y } = part.position;
+    return x < 400 && x > 0 && y < 400 && y > 0;
   }
 
   getDiff(pose) {
