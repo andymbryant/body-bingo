@@ -1,7 +1,7 @@
 <template>
   <div id='webcam-view'>
     <video id="webcam" ref='webcam' width='420' height='350' muted autoplay></video>
-    <button v-if='!isWebcamEnabled' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button>
+    <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button>
   </div>
 </template>
 
@@ -15,10 +15,16 @@ let model = null;
 
 export default {
   name: 'Webcam',
+  props: {
+    isGamePaused: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       loading: false,
-      isWebcamEnabled: false,
+      isWebcamReady: false,
       video: null,
     };
   },
@@ -45,15 +51,19 @@ export default {
         .catch((err) => console.error(err));
     },
     async completeWebcamEnable() {
-      this.isWebcamEnabled = true;
+      this.isWebcamReady = true;
+      this.$emit('update-webcam-ready', true);
       // Once webcam is enabled, startin predicting!
-      this.predict();
+      // this.predict();
     },
     async predict() {
-      const pose = await this.estimatePoseOnImage(this.video);
-      console.log(pose);
-      // make prediction on pose
-      window.requestAnimationFrame(this.predict);
+      console.log('predict');
+      if (!this.isGamePaused) {
+        const pose = await this.estimatePoseOnImage(this.video);
+        // console.log(pose);
+        // make prediction on pose
+        window.requestAnimationFrame(this.predict);
+      }
     },
   },
   created() {

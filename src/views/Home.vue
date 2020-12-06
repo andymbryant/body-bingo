@@ -8,11 +8,17 @@
         <p>Description of the app and how it works and why you want to use it.</p>
       </div>
       <div id='controls'>
-        <button class='btn'>Start</button>
+        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
+        <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button class='btn'>Reset</button>
       </div>
     </div>
-    <Webcam @update-poses='updatePoses'/>
+    <Webcam
+      ref='webcam'
+      :isGamePaused='isGamePaused'
+      @update-webcam-ready='updateWebcamReady'
+      @update-poses='updatePoses'
+    />
   </div>
   <div id="cards">
     <!-- <Row v-for='suit in suits' :suit='suit' :key='suit'/> -->
@@ -32,11 +38,32 @@ export default {
   data() {
     return {
       loading: false,
-      isWebcamEnabled: false,
+      isGameActive: false,
+      isGamePaused: false,
+      isWebcamReady: false,
       poses: [],
     };
   },
   methods: {
+    updateWebcamReady(bool) {
+      console.log(bool);
+      this.isWebcamReady = bool;
+    },
+    gameAction() {
+      if (this.isGameActive) {
+        this.pause();
+      } else {
+        this.start();
+      }
+    },
+    start() {
+      this.isGameActive = true;
+      this.isGamePaused = false;
+      this.$nextTick(() => this.$refs.webcam.predict());
+    },
+    pause() {
+      this.isGamePaused = true;
+    },
     updatePoses(score) {
       this.cards.forEach((c) => {
         const card = c;
@@ -51,6 +78,11 @@ export default {
       // card.isAvailable = false
       // this.predictions.map((p) => console.log(p));
     },
+  },
+  computed: {
+    // isStartDisabled() {
+    //   return !this.isCamReady;
+    // },
   },
   created() {
     this.loading = true;
