@@ -4,8 +4,8 @@
     <div class='half' id="content">
       <div id='title'>
         <h1>Body Bingo</h1>
-        <h3>Throwing Shapes</h3>
-        <p>Description of the app and how it works and why you want to use it.</p>
+        <h3>Let's throw some shapes!</h3>
+        <p>Enable the webcam, click start, and make each pose on the cards to win!</p>
       </div>
       <div id='controls'>
         <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
