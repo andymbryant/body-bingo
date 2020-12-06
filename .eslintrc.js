@@ -16,7 +16,8 @@ module.exports = {
     'max-len': 0,
     'no-return-assign': 0,
     'no-plusplus': 0,
-    'no-unused-vars': 0
+    'no-unused-vars': 0,
+    'class-methods-use-this': 0,
   },
   overrides: [
     {

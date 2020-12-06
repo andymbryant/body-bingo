@@ -17,11 +17,11 @@
       ref='webcam'
       :isGamePaused='isGamePaused'
       @update-webcam-ready='updateWebcamReady'
-      @update-poses='updatePoses'
+      @update-pose='updatePose'
     />
   </div>
-  <div id="cards">
-    <!-- <Row v-for='suit in suits' :suit='suit' :key='suit'/> -->
+  <div id="actions-board">
+    <ActionCard v-for='action in actions' :action='action' :key='action'/>
   </div>
 </span>
 </template>
@@ -29,11 +29,15 @@
 <script>
 /* eslint-disable no-return-assign */
 import Webcam from '@/components/Webcam.vue';
+import ActionCard from '@/components/ActionCard.vue';
+import Connect from '@/action/Connect';
+import Separate from '@/action/Separate';
 
 export default {
   name: 'Home',
   components: {
     Webcam,
+    ActionCard,
   },
   data() {
     return {
@@ -41,7 +45,7 @@ export default {
       isGameActive: false,
       isGamePaused: false,
       isWebcamReady: false,
-      poses: [],
+      actions: [],
     };
   },
   methods: {
@@ -55,7 +59,18 @@ export default {
         this.isGamePaused = false;
         this.isGameActive = false;
       }, 100);
+      this.getActions()
+        .then((actions) => actions.forEach((a) => this.actions.push(a)));
       // reset timer, reset board, etc.
+    },
+    async getActions() {
+      const actions = this.actionData.map((data) => {
+        if (data.actionType === 'connect') {
+          return new Connect(data);
+        }
+        return new Separate(data);
+      });
+      return actions;
     },
     updateWebcamReady(bool) {
       this.isWebcamReady = bool;
@@ -75,25 +90,40 @@ export default {
     pause() {
       this.isGamePaused = true;
     },
-    updatePoses(score) {
-      this.cards.forEach((c) => {
-        const card = c;
-        if (card.name === score) {
-          card.isActive = true;
-          card.isAvailable = false;
-        } else {
-          card.isActive = false;
-        }
-      });
-      // const card = this.cards.find(c => c.value === classname)
-      // card.isAvailable = false
-      // this.predictions.map((p) => console.log(p));
+    updatePose(pose) {
+      this.actions.forEach((a) => a.testPose(pose));
     },
   },
   computed: {
-    // isStartDisabled() {
-    //   return !this.isCamReady;
-    // },
+    actionData() {
+      const actionData = [
+        {
+          name: 'Touch Elbows',
+          partOneName: 'leftElbow',
+          partTwoName: 'rightElbow',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Left Wrist to Right Shoulder',
+          partOneName: 'rightWrist',
+          partTwoName: 'leftShoulder',
+          actionType: 'connect',
+        },
+        {
+          name: 'Dab!',
+          partOneName: 'rightElbow',
+          partTwoName: 'rightEye',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Knees',
+          partOneName: 'rightKnee',
+          partTwoName: 'leftKnee',
+          actionType: 'connect',
+        },
+      ];
+      return actionData;
+    },
   },
   created() {
     this.loading = true;
@@ -110,7 +140,7 @@ export default {
 #top {
   height: 300px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 #content {
@@ -130,8 +160,14 @@ export default {
   font-size: 1.2rem;
 }
 
-#cards {
-  width: 800px;
+#actions-board {
+  margin-top: 2rem;
+  height: 300px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
 }
 
 .half {

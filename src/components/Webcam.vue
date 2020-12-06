@@ -57,10 +57,9 @@ export default {
       // this.predict();
     },
     async predict() {
-      console.log('predict');
       if (!this.isGamePaused) {
         const pose = await this.estimatePoseOnImage(this.video);
-        // console.log(pose);
+        this.$emit('update-pose', pose);
         // make prediction on pose
         window.requestAnimationFrame(this.predict);
       }
