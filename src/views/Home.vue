@@ -10,7 +10,7 @@
       <div id='controls'>
         <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
         <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
-        <button class='btn'>Reset</button>
+        <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button>
       </div>
     </div>
     <Webcam
@@ -45,8 +45,19 @@ export default {
     };
   },
   methods: {
+    async init() {
+      this.reset();
+    },
+    async reset() {
+      // If predict is running, stop it
+      this.isGamePaused = true;
+      setTimeout(() => {
+        this.isGamePaused = false;
+        this.isGameActive = false;
+      }, 100);
+      // reset timer, reset board, etc.
+    },
     updateWebcamReady(bool) {
-      console.log(bool);
       this.isWebcamReady = bool;
     },
     gameAction() {
@@ -88,7 +99,8 @@ export default {
     this.loading = true;
   },
   mounted() {
-    this.$nextTick(() => this.loading = false);
+    this.init()
+      .then(() => this.$nextTick(() => this.loading = false));
   },
 };
 </script>
@@ -108,15 +120,14 @@ export default {
 }
 
 #controls {
-  width: 250px;
   display: flex;
   justify-content: space-between;
 }
 
 .btn {
-  width: 100px;
+  width: 120px;
   height: 50px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 #cards {
