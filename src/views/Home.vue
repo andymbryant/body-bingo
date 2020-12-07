@@ -305,7 +305,7 @@ export default {
   padding: 0;
   font-weight: 700;
   font-size: 1.2rem;
-  color: rgb(202, 27, 27);
+  color: #fa820e;
 }
 
 </style>

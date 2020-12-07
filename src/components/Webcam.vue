@@ -98,7 +98,7 @@ export default {
   left: 125px;
   width: 100px;
   height: 75px;
-  background-color: lightgreen;
+  background-color: #fa820e;
 }
 
 </style>
