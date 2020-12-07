@@ -29,7 +29,7 @@ export default {
 
 <style scoped>
   .card-ctr {
-    height: 75px;
+    height: 65px;
     border-radius: 10px;
     border: 1px solid black;
     display: flex;

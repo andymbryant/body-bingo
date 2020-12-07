@@ -4,15 +4,15 @@
     <div class='half' id="content">
       <div id='title'>
         <h1>Body Bingo</h1>
-        <h3>Let's throw some shapes!</h3>
-        <p>Enable the webcam, click start, and make each pose on the cards to win!</p>
+        <h3><em>Let's throw some shapes!</em></h3>
+        <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
+          But don't use your mouse, move your body!</p>
       </div>
       <div id='controls'>
         <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
         <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
-        <button v-else class='btn' @click='pause'>New Game</button>
+        <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
-        <!-- <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button> -->
       </div>
       <div v-if='!isModelReady'>(loading model...)</div>
     </div>
@@ -23,6 +23,9 @@
       @update-webcam-ready='updateWebcamReady'
       @update-pose='updatePose'
     />
+  </div>
+  <div class='bingo-ctr'>
+    <div class='bingo-message' v-if='bingo()'>BINGO! You won!</div>
   </div>
   <div id="actions-board">
     <ActionCard v-for='action in actions' :action='action' :key='action'/>
@@ -36,7 +39,6 @@ import Webcam from '@/components/Webcam.vue';
 import Timer from '@/components/Timer.vue';
 import ActionCard from '@/components/ActionCard.vue';
 import Connect from '@/action/Connect';
-import Separate from '@/action/Separate';
 import * as shuffle from 'lodash/shuffle';
 
 export default {
@@ -77,7 +79,8 @@ export default {
         if (data.actionType === 'connect') {
           return new Connect(data);
         }
-        return new Separate(data);
+        // Add different kinds, like separate and maybe position
+        return new Connect(data);
       });
       return shuffle(actions);
     },
@@ -107,6 +110,32 @@ export default {
     },
     updatePose(pose) {
       this.actions.forEach((a) => a.testPose(pose));
+      if (this.bingo()) {
+        this.isGameOver = true;
+        this.isGameActive = false;
+      }
+    },
+    bingo() {
+      let flag = false;
+      const wins = [
+        // rows
+        [0, 1, 2, 3],
+        [4, 5, 6, 7],
+        [8, 9, 10, 11],
+        [12, 13, 14, 15],
+        // columns
+        [0, 4, 8, 12],
+        [1, 5, 9, 13],
+        [2, 6, 10, 14],
+        [3, 7, 11, 15],
+      ];
+      const actionIsComplete = (index) => this.actions[index].isComplete;
+      wins.forEach((win) => {
+        if (win.every(actionIsComplete)) {
+          flag = true;
+        }
+      });
+      return flag;
     },
   },
   computed: {
@@ -152,6 +181,7 @@ export default {
           name: 'Touch Wrists Together',
           partOneName: 'rightWrist',
           partTwoName: 'leftWrist',
+          threshold: 10,
           actionType: 'connect',
         },
         {
@@ -174,26 +204,30 @@ export default {
         },
         {
           name: 'Put Face in Bottom Left',
-          partOneName: 'leftEye',
+          partOneName: 'nose',
           partTwoName: 'bottomLeft',
+          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Face in Top Right',
-          partOneName: 'rightEye',
+          partOneName: 'nose',
           partTwoName: 'topRight',
+          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Face in Bottom Right',
-          partOneName: 'rightEye',
+          partOneName: 'nose',
           partTwoName: 'bottomRight',
+          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Face in Top Left',
-          partOneName: 'leftEye',
+          partOneName: 'nose',
           partTwoName: 'topLeft',
+          threshold: 50,
           actionType: 'connect',
         },
         {
@@ -249,7 +283,6 @@ export default {
 }
 
 #actions-board {
-  margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -259,6 +292,20 @@ export default {
 
 .half {
   width: 300px;
+}
+
+.bingo-ctr {
+  width: 100%;
+  height: 25px;
+  padding-bottom: 0.5rem;
+}
+
+.bingo-message {
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: rgb(202, 27, 27);
 }
 
 </style>
