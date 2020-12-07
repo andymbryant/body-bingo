@@ -10,7 +10,8 @@
       <div id='controls'>
         <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
         <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
-        <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button>
+        <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
+        <!-- <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button> -->
       </div>
       <div v-if='!isModelReady'>(loading model...)</div>
     </div>
@@ -31,6 +32,7 @@
 <script>
 /* eslint-disable no-return-assign */
 import Webcam from '@/components/Webcam.vue';
+import Timer from '@/components/Timer.vue';
 import ActionCard from '@/components/ActionCard.vue';
 import Connect from '@/action/Connect';
 import Separate from '@/action/Separate';
@@ -38,6 +40,7 @@ import Separate from '@/action/Separate';
 export default {
   name: 'Home',
   components: {
+    Timer,
     Webcam,
     ActionCard,
   },
@@ -45,6 +48,7 @@ export default {
     return {
       loading: false,
       isGameActive: false,
+      isGameOver: false,
       isGamePaused: false,
       isWebcamReady: false,
       isModelReady: false,
@@ -91,7 +95,10 @@ export default {
     start() {
       this.isGameActive = true;
       this.isGamePaused = false;
-      this.$nextTick(() => this.$refs.webcam.predict());
+      this.$nextTick(() => {
+        this.$refs.webcam.predict();
+        this.$refs.timer.start();
+      });
     },
     pause() {
       this.isGamePaused = true;
@@ -157,6 +164,7 @@ export default {
 
 #controls {
   display: flex;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
