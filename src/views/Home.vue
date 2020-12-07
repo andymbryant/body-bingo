@@ -9,7 +9,8 @@
       </div>
       <div id='controls'>
         <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
-        <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
+        <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
+        <button v-else class='btn' @click='pause'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
         <!-- <button class='btn' :disabled='!isWebcamReady' @click='reset'>Reset</button> -->
       </div>
@@ -36,6 +37,7 @@ import Timer from '@/components/Timer.vue';
 import ActionCard from '@/components/ActionCard.vue';
 import Connect from '@/action/Connect';
 import Separate from '@/action/Separate';
+import * as shuffle from 'lodash/shuffle';
 
 export default {
   name: 'Home',
@@ -77,7 +79,7 @@ export default {
         }
         return new Separate(data);
       });
-      return actions;
+      return shuffle(actions);
     },
     updateWebcamReady(bool) {
       this.isWebcamReady = bool;
@@ -117,9 +119,81 @@ export default {
           actionType: 'connect',
         },
         {
+          name: 'Touch Left Wrist to Left Ear',
+          partOneName: 'leftWrist',
+          partTwoName: 'rightEar',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Right Wrist to Nose',
+          partOneName: 'rightWrist',
+          partTwoName: 'nose',
+          actionType: 'connect',
+        },
+        {
           name: 'Touch Left Wrist to Nose',
           partOneName: 'leftWrist',
           partTwoName: 'nose',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Left Wrist to Right Elbow',
+          partOneName: 'leftWrist',
+          partTwoName: 'rightElbow',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Right Wrist to Left Elbow',
+          partOneName: 'rightWrist',
+          partTwoName: 'leftElbow',
+          actionType: 'connect',
+        },
+        {
+          name: 'Touch Wrists Together',
+          partOneName: 'rightWrist',
+          partTwoName: 'leftWrist',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Left Elbow in Bottom Left',
+          partOneName: 'leftElbow',
+          partTwoName: 'bottomLeft',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Right Wrist in Top Right',
+          partOneName: 'rightWrist',
+          partTwoName: 'topRight',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Right Elbow in Bottom Right',
+          partOneName: 'rightElbow',
+          partTwoName: 'bottomRight',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Face in Bottom Left',
+          partOneName: 'leftEye',
+          partTwoName: 'bottomLeft',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Face in Top Right',
+          partOneName: 'rightEye',
+          partTwoName: 'topRight',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Face in Bottom Right',
+          partOneName: 'rightEye',
+          partTwoName: 'bottomRight',
+          actionType: 'connect',
+        },
+        {
+          name: 'Put Face in Top Left',
+          partOneName: 'leftEye',
+          partTwoName: 'topLeft',
           actionType: 'connect',
         },
         {
@@ -176,10 +250,9 @@ export default {
 
 #actions-board {
   margin-top: 2rem;
-  height: 300px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   grid-column-gap: 10px;
   grid-row-gap: 10px;
 }
