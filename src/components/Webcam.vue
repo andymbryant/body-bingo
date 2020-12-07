@@ -50,7 +50,7 @@ export default {
     },
     async estimatePoseOnImage(element) {
       const pose = await model.estimateSinglePose(element, {
-        flipHorizontal: false,
+        flipHorizontal: true,
       });
       return pose;
     },
