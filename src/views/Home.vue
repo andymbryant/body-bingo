@@ -296,8 +296,8 @@ export default {
 
 .bingo-ctr {
   width: 100%;
-  height: 25px;
-  padding-bottom: 0.5rem;
+  height: 30px;
+  padding: 0.2rem 0 0.5rem 0;
 }
 
 .bingo-message {
