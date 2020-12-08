@@ -1,15 +1,9 @@
 <template>
 <span v-if='!loading'>
   <div id="top">
-    <div class='half' id="content">
-      <div id='title'>
-        <h1>Body Bingo</h1>
-        <h3><em>Let's throw some shapes!</em></h3>
-        <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
-          But don't use your mouse, move your body!</p>
-      </div>
+    <div>
       <div id='controls'>
-        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='start'>Start</button>
+        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
         <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
@@ -18,8 +12,11 @@
     </div>
     <Webcam
       ref='webcam'
+      :width='width'
+      :height='height'
       @update-model-ready='updateModelReady'
       :isGamePaused='isGamePaused'
+      :isGameActive='isGameActive'
       @update-webcam-ready='updateWebcamReady'
       @update-pose='updatePose'
     />
@@ -57,6 +54,8 @@ export default {
       isWebcamReady: false,
       isModelReady: false,
       actions: [],
+      width: 640,
+      height: 480,
     };
   },
   methods: {
@@ -75,7 +74,10 @@ export default {
       // reset timer, reset board, etc.
     },
     async getActions() {
-      const actions = this.actionData.map((data) => {
+      const actions = this.actionData.map((d) => {
+        const data = d;
+        data.width = this.width;
+        data.height = this.height;
         if (data.actionType === 'connect') {
           return new Connect(data);
         }
@@ -90,14 +92,7 @@ export default {
     updateModelReady(bool) {
       this.isModelReady = bool;
     },
-    gameAction() {
-      if (this.isGameActive) {
-        this.pause();
-      } else {
-        this.start();
-      }
-    },
-    start() {
+    play() {
       this.isGameActive = true;
       this.isGamePaused = false;
       this.$nextTick(() => {
@@ -262,7 +257,6 @@ export default {
 <style>
 
 #top {
-  height: 300px;
   display: flex;
   justify-content: space-between;
 }
@@ -275,12 +269,13 @@ export default {
 
 #controls {
   display: flex;
+  flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
 }
 
 .btn {
-  width: 120px;
+  width: 100%;
   height: 50px;
   font-size: 1.2rem;
 }

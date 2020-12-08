@@ -5,33 +5,27 @@ export default class BaseAction {
     this.partTwoName = data.partTwoName;
     this.threshold = data.threshold || 20;
     this.isComplete = false;
-  }
-
-  get width() {
-    return 640;
-  }
-
-  get height() {
-    return 480;
+    this.width = data.width;
+    this.height = data.height;
   }
 
   getPoints() {
     return [
       {
         part: 'topLeft',
-        position: { x: 640, y: 0 },
-      },
-      {
-        part: 'topRight',
         position: { x: 0, y: 0 },
       },
       {
+        part: 'topRight',
+        position: { x: this.width, y: 0 },
+      },
+      {
         part: 'bottomLeft',
-        position: { x: 640, y: 480 },
+        position: { x: 0, y: this.height },
       },
       {
         part: 'bottomRight',
-        position: { x: 0, y: 480 },
+        position: { x: this.width, y: this.height },
       },
     ];
   }
@@ -43,7 +37,7 @@ export default class BaseAction {
 
   isPartVisible(part) {
     const { x, y } = part.position;
-    return x <= 640 && x >= 0 && y <= 480 && y >= 0;
+    return x <= this.width && x >= 0 && y <= this.height && y >= 0;
   }
 
   getDiff(pose) {

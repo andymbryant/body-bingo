@@ -2,7 +2,7 @@
   <div id='webcam-view'>
     <video id="webcam" ref='webcam' width='0' height='0' muted autoplay></video>
     <canvas id='canvas' ref='canvas' :width='width' :height='height'></canvas>
-    <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button>
+    <!-- <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button> -->
   </div>
 </template>
 
@@ -17,7 +17,19 @@ let model = null;
 export default {
   name: 'Webcam',
   props: {
+    width: {
+      type: Number,
+      required: true,
+    },
+    height: {
+      type: Number,
+      required: true,
+    },
     isGamePaused: {
+      type: Boolean,
+      required: true,
+    },
+    isGameActive: {
       type: Boolean,
       required: true,
     },
@@ -28,14 +40,13 @@ export default {
       isWebcamReady: false,
       video: null,
       canvas: null,
-      width: 640,
-      height: 480,
     };
   },
   methods: {
     async init() {
       await this.bindVideo();
       await this.loadModel();
+      await this.beginWebcamEnable();
     },
     async bindVideo() {
       setTimeout(() => {
@@ -45,13 +56,18 @@ export default {
       }, 100);
     },
     async loadModel() {
-      const mod = await posenet.load({
+      const highSettings = {
         architecture: 'ResNet50',
         outputStride: 32,
-        inputResolution: { width: this.width, height: this.height },
+        inputResolution: { width: this.width / 2, height: this.height / 2 },
         quantBytes: 2,
-      });
-      model = mod;
+      };
+      const lowSettings = {
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        inputResolution: { width: this.width / 2, height: this.height / 2 },
+      };
+      model = await posenet.load(lowSettings);
       this.$emit('update-model-ready', true);
     },
     async estimatePoseOnImage(element) {
@@ -61,22 +77,32 @@ export default {
       return pose;
     },
     async beginWebcamEnable(event = null) {
-      const constraints = { video: true };
+      // Constrain to the designated dimensions
+      const constraints = {
+        video: true,
+        audio: false,
+        width: this.width,
+        height: this.height,
+      };
       navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream) => {
+        .then(async (stream) => {
           let { width, height } = stream.getTracks()[0].getSettings();
-          this.width = width;
-          this.height = height;
-
+          if (width !== this.width) {
+            console.error('Width mismatch. Check webcam settings');
+          }
+          if (height !== this.height) {
+            console.error('Height mismatch. Check webcam settings');
+          }
           this.video.srcObject = stream;
         })
-        // .then(() => )
         .then(() => this.video.addEventListener('loadeddata', this.completeWebcamEnable))
+        // The constraints are requests, there needs to be a fallback
         .catch((err) => console.error(err));
     },
     async completeWebcamEnable() {
       this.isWebcamReady = true;
       this.$emit('update-webcam-ready', true);
+      this.predict();
     },
     drawVideoOnCanvas() {
       this.ctx.clearRect(0, 0, this.width, this.height);
@@ -103,15 +129,15 @@ export default {
       });
     },
     async predict() {
-      let pose;
-      if (!this.isGamePaused) {
-        const input = tf.browser.fromPixels(this.video);
-        pose = await this.estimatePoseOnImage(input);
-        this.$emit('update-pose', pose);
-        // make prediction on pose
-      }
+      const input = tf.browser.fromPixels(this.video);
+      const pose = await this.estimatePoseOnImage(input);
       this.drawVideoOnCanvas();
-      if (pose) await this.drawPose(pose);
+      await this.drawPose(pose);
+      if (!this.isGamePaused && this.isGameActive) {
+        if (pose.score > 0.38) {
+          this.$emit('update-pose', pose);
+        }
+      }
       window.requestAnimationFrame(this.predict);
     },
   },
@@ -119,19 +145,12 @@ export default {
     this.loading = true;
   },
   mounted() {
-    this.init()
-      .then(() => this.loading = false);
+    this.init().then(() => this.loading = false);
   },
 };
 </script>
 
 <style scoped>
-
-#canvas {
-  width: 400;
-  height: 400;
-  border: 1px solid black;
-}
 
 #webcam-button {
   position: absolute;
