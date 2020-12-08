@@ -1,9 +1,6 @@
 <template>
-  <div id='webcam-view'>
-    <div v-if='!isWebcamReady' id='webcam-loading-message'>Waiting on webcam...</div>
-    <video id="webcam" ref='webcam' width='0' height='0' muted autoplay></video>
-    <canvas id='canvas' ref='canvas' :width='width' :height='height'></canvas>
-  </div>
+  <video id="webcam" ref='webcam' width='0' height='0' muted autoplay></video>
+  <canvas id='canvas' ref='canvas' :width='width' :height='height'></canvas>
 </template>
 
 <script>
@@ -65,7 +62,7 @@ export default {
       const lowSettings = {
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: this.width / 2, height: this.height / 2 },
+        inputResolution: { width: this.width / 1.5, height: this.height / 1.5 },
       };
       model = await posenet.load(lowSettings);
       this.$emit('update-model-ready', true);
@@ -134,7 +131,7 @@ export default {
       this.drawVideoOnCanvas();
       await this.drawPose(pose);
       if (!this.isGamePaused && this.isGameActive) {
-        if (pose.score > 0.38) {
+        if (pose.score > 0.37) {
           this.$emit('update-pose', pose);
         }
       }
@@ -149,19 +146,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#webcam-view {
-  position: relative;
-}
-
-#webcam-loading-message {
-  position: absolute;
-  top: 50%;
-  left: 30%;
-  color: grey;
-  font-size: 1.5rem;
-  font-weight: 700
-}
-
-</style>

@@ -3,7 +3,7 @@ export default class BaseAction {
     this.name = data.name;
     this.partOneName = data.partOneName;
     this.partTwoName = data.partTwoName;
-    this.threshold = data.threshold || 20;
+    this.threshold = data.threshold || 30;
     this.isComplete = false;
     this.width = data.width;
     this.height = data.height;

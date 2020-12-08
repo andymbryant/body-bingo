@@ -34,19 +34,19 @@ export default {
 
 <style scoped>
   .card-ctr {
-    height: 65px;
-    border-radius: 10px;
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    border-top: 1px solid black;
+    border-right: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: grey;
-    color: white;
+    background-color: rgb(204, 204, 204);
+    color: black;
     font-size: 1.2rem;
     font-weight: 700;
     padding: 0.5rem;
     transition: all 0.5s;
-    filter:blur(5px)
+    /* filter:blur(5px) */
   }
   .active {
     filter: none;

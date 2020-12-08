@@ -16,21 +16,22 @@
       </div>
       <div v-if='!isModelReady'>(loading model...)</div>
     </div>
-    <Webcam
-      ref='webcam'
-      :width='width'
-      :height='height'
-      @update-model-ready='updateModelReady'
-      :isGamePaused='isGamePaused'
-      :isGameActive='isGameActive'
-      @update-webcam-ready='updateWebcamReady'
-      @update-pose='updatePose'
-    />
+    <div id='webcam-view'>
+      <div v-if='!isWebcamReady' id='webcam-loading-message'>Waiting on webcam...</div>
+      <div v-if='bingo()' id='bingo-message'>BINGO!</div>
+        <Webcam
+          ref='webcam'
+          :width='width'
+          :height='height'
+          @update-model-ready='updateModelReady'
+          :isGamePaused='isGamePaused'
+          :isGameActive='isGameActive'
+          @update-webcam-ready='updateWebcamReady'
+          @update-pose='updatePose'
+        />
+      </div>
   </div>
-  <div class='bingo-ctr'>
-    <div class='bingo-message' v-if='bingo()'>BINGO! You won!</div>
-  </div>
-  <div id="actions-board">
+  <div id="action-board">
     <ActionCard v-for='action in actions' :isGameActive='isGameActive' :action='action' :key='action'/>
   </div>
 </div>
@@ -305,14 +306,38 @@ export default {
   width: 150px;
   height: 50px;
   font-size: 1.2rem;
+  border: 3px solid black;
 }
 
-#actions-board {
+#webcam-view {
+  position: relative;
+}
+
+#webcam-loading-message {
+  position: absolute;
+  top: 50%;
+  left: 32%;
+  color: grey;
+  font-size: 1.5rem;
+  font-weight: 700
+}
+
+#bingo-message {
+  position: absolute;
+  top: 39%;
+  left: 24%;
+  color: red;
+  font-size: 6rem;
+  font-weight: 700
+}
+
+#action-board {
   display: grid;
+  grid-template-columns: 50px 50px 50px 50px;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
 }
 
 .bingo-ctr {
