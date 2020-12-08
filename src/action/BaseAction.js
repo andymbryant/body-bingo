@@ -7,27 +7,31 @@ export default class BaseAction {
     this.isComplete = false;
   }
 
-  get screenSize() {
-    return 350;
+  get width() {
+    return 640;
+  }
+
+  get height() {
+    return 480;
   }
 
   getPoints() {
     return [
       {
         part: 'topLeft',
-        position: { x: 0, y: 0 },
+        position: { x: 640, y: 0 },
       },
       {
         part: 'topRight',
-        position: { x: this.screenSize, y: 0 },
+        position: { x: 0, y: 0 },
       },
       {
         part: 'bottomLeft',
-        position: { x: 0, y: this.screenSize },
+        position: { x: 640, y: 480 },
       },
       {
         part: 'bottomRight',
-        position: { x: this.screenSize, y: this.screenSize },
+        position: { x: 0, y: 480 },
       },
     ];
   }
@@ -39,7 +43,7 @@ export default class BaseAction {
 
   isPartVisible(part) {
     const { x, y } = part.position;
-    return x <= this.screenSize && x >= 0 && y <= this.screenSize && y >= 0;
+    return x <= 640 && x >= 0 && y <= 480 && y >= 0;
   }
 
   getDiff(pose) {

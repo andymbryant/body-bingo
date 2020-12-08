@@ -188,18 +188,21 @@ export default {
           name: 'Put Left Elbow in Bottom Left',
           partOneName: 'leftElbow',
           partTwoName: 'bottomLeft',
+          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Right Wrist in Top Right',
           partOneName: 'rightWrist',
           partTwoName: 'topRight',
+          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Right Elbow in Bottom Right',
           partOneName: 'rightElbow',
           partTwoName: 'bottomRight',
+          threshold: 50,
           actionType: 'connect',
         },
         {
