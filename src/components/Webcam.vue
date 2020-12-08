@@ -6,6 +6,7 @@
 <script>
 /* eslint-disable prefer-const */
 import * as tf from '@tensorflow/tfjs';
+import colorKey from '@/colorKey';
 
 const posenet = require('@tensorflow-models/posenet');
 
@@ -13,6 +14,7 @@ let model = null;
 
 export default {
   name: 'Webcam',
+  emits: ['update-model-ready', 'update-webcam-ready', 'update-pose'],
   props: {
     width: {
       type: Number,
@@ -113,12 +115,13 @@ export default {
       // Clear previos frame
       // Draw video frame
       pose.keypoints.forEach((k) => {
-        if (k.score > 0.5) {
+        const color = colorKey[k.part] || 'grey';
+        if (k.score > 0.6 && k.part !== 'leftEye' && k.part !== 'rightEye') {
           const { x, y } = k.position;
           this.ctx.save();
           this.ctx.beginPath();
-          this.ctx.fillStyle = '#00ff00';
-          this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+          this.ctx.fillStyle = color;
+          this.ctx.arc(x, y, 6, 0, 2 * Math.PI);
           this.ctx.fill();
           this.ctx.stroke();
           this.ctx.restore();
@@ -131,9 +134,7 @@ export default {
       this.drawVideoOnCanvas();
       await this.drawPose(pose);
       if (!this.isGamePaused && this.isGameActive) {
-        if (pose.score > 0.37) {
-          this.$emit('update-pose', pose);
-        }
+        this.$emit('update-pose', pose);
       }
       window.requestAnimationFrame(this.predict);
     },

@@ -111,6 +111,8 @@ export default {
       this.isGamePaused = true;
     },
     updatePose(pose) {
+      // Only select those actions that are associated with parts of the body included in the pose
+      // const actions = this.actions.filter((a) => (pose.keypoints.map((k) => k.part).includes(a)));
       this.actions.forEach((a) => a.testPose(pose));
       if (this.bingo()) {
         this.isGameOver = true;
@@ -190,49 +192,42 @@ export default {
           name: 'Put Left Elbow in Bottom Left',
           partOneName: 'leftElbow',
           partTwoName: 'bottomLeft',
-          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Right Wrist in Top Right',
           partOneName: 'rightWrist',
           partTwoName: 'topRight',
-          threshold: 50,
           actionType: 'connect',
         },
         {
           name: 'Put Right Elbow in Bottom Right',
           partOneName: 'rightElbow',
           partTwoName: 'bottomRight',
-          threshold: 50,
           actionType: 'connect',
         },
         {
-          name: 'Put Face in Bottom Left',
+          name: 'Put Nose in Bottom Left',
           partOneName: 'nose',
           partTwoName: 'bottomLeft',
-          threshold: 50,
           actionType: 'connect',
         },
         {
-          name: 'Put Face in Top Right',
+          name: 'Put Nose in Top Right',
           partOneName: 'nose',
           partTwoName: 'topRight',
-          threshold: 50,
           actionType: 'connect',
         },
         {
-          name: 'Put Face in Bottom Right',
+          name: 'Put Nose in Bottom Right',
           partOneName: 'nose',
           partTwoName: 'bottomRight',
-          threshold: 50,
           actionType: 'connect',
         },
         {
-          name: 'Put Face in Top Left',
+          name: 'Put Nose in Top Left',
           partOneName: 'nose',
           partTwoName: 'topLeft',
-          threshold: 50,
           actionType: 'connect',
         },
         {

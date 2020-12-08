@@ -1,5 +1,10 @@
 <template>
-  <div :class='cardClass'>{{action.name}}</div>
+  <div :class='cardClass'>
+    <div class='card-title'>Touch
+      <span :class="[action.partOneName]">{{action.partOneName}}</span> to
+      <span :class='[action.partTwoName]'>{{action.partTwoName}}</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,6 +33,11 @@ export default {
         active: this.isGameActive,
       };
     },
+    colorClass() {
+      return {
+
+      };
+    },
   },
 };
 </script>
@@ -40,10 +50,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(204, 204, 204);
-    color: black;
-    font-size: 1.2rem;
-    font-weight: 700;
+    background-color: rgb(236, 236, 236);
+
     padding: 0.5rem;
     transition: all 0.5s;
     /* filter:blur(5px) */
@@ -52,6 +60,45 @@ export default {
     filter: none;
   }
   .complete {
-    background-color: green
+    background-color: rgb(204, 255, 204);
+  }
+  .card-title {
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .leftElbow {
+    color: blue;
+  }
+
+  .rightElbow {
+    color: magenta;
+  }
+
+  .leftWrist {
+    color: darkorange;
+  }
+
+  .rightWrist {
+    color: salmon;
+  }
+
+  .nose {
+    color: crimson;
+  }
+
+  .leftEar {
+    color: darkgreen;
+  }
+  .rightEar {
+    color: darkorchid;
+  }
+  .leftShoulder {
+    color: hotpink;
+  }
+
+  .rightShoulder {
+    color: skyblue;
   }
 </style>
