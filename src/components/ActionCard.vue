@@ -1,8 +1,8 @@
 <template>
   <div :class='cardClass'>
     <div class='card-title'>Touch
-      <span :class="[action.partOneName]">{{action.partOneName}}</span> to
-      <span :class='[action.partTwoName]'>{{action.partTwoName}}</span>
+      <span :class="[action.partOneName]">{{getPartName(action.partOneName)}}</span> to
+      <span :class='[action.partTwoName]'>{{getPartName(action.partTwoName)}}</span>
     </div>
   </div>
 </template>
@@ -24,6 +24,38 @@ export default {
     isActionComplete() {
       return this.action.isComplete;
     },
+    getPartName(name) {
+      switch (name) {
+        case 'leftEar':
+          return 'Left Ear';
+        case 'rightEar':
+          return 'Right Ear';
+        case 'leftElbow':
+          return 'Left Elbow';
+        case 'rightElbow':
+          return 'Right Elbow';
+        case 'leftWrist':
+          return 'Left Wrist';
+        case 'rightWrist':
+          return 'Right Wrist';
+        case 'leftShoulder':
+          return 'Left Shoulder';
+        case 'rightShoulder':
+          return 'rightShoulder';
+        case 'nose':
+          return 'Nose';
+        case 'topLeft':
+          return 'Top Left of Screen';
+        case 'topRight':
+          return 'Top Right of Screen';
+        case 'bottomLeft':
+          return 'Bottom Left of Screen';
+        case 'bottomRight':
+          return 'Bottom Right of Screen';
+
+        default: return name;
+      }
+    },
   },
   computed: {
     cardClass() {
@@ -31,11 +63,6 @@ export default {
         'card-ctr': true,
         complete: this.isActionComplete(),
         active: this.isGameActive,
-      };
-    },
-    colorClass() {
-      return {
-
       };
     },
   },
@@ -60,7 +87,7 @@ export default {
     filter: none;
   }
   .complete {
-    background-color: rgb(204, 255, 204);
+    background-color: rgb(152, 233, 152);
   }
   .card-title {
     color: black;
@@ -100,5 +127,9 @@ export default {
 
   .rightShoulder {
     color: skyblue;
+  }
+
+  .topLeft, .bottomLeft, .topRight, .bottomRight {
+    color: grey;
   }
 </style>

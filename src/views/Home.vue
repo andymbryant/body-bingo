@@ -233,13 +233,13 @@ export default {
         {
           name: 'Dab with Right Arm',
           partOneName: 'rightElbow',
-          partTwoName: 'rightEye',
+          partTwoName: 'nose',
           actionType: 'connect',
         },
         {
           name: 'Dab with Left Arm',
           partOneName: 'leftElbow',
-          partTwoName: 'leftEye',
+          partTwoName: 'nose',
           actionType: 'connect',
         },
       ];
