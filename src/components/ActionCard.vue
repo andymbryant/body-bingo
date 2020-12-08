@@ -10,6 +10,10 @@ export default {
       type: Object,
       required: true,
     },
+    isGameActive: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
     isActionComplete() {
@@ -21,6 +25,7 @@ export default {
       return {
         'card-ctr': true,
         complete: this.isActionComplete(),
+        active: this.isGameActive,
       };
     },
   },
@@ -41,6 +46,10 @@ export default {
     font-weight: 700;
     padding: 0.5rem;
     transition: all 0.5s;
+    filter:blur(5px)
+  }
+  .active {
+    filter: none;
   }
   .complete {
     background-color: green

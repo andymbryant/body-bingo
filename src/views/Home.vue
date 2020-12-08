@@ -3,7 +3,7 @@
   <div id="top">
     <div>
       <div id='controls'>
-        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
+        <button id='play-btn' v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
         <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
@@ -25,7 +25,7 @@
     <div class='bingo-message' v-if='bingo()'>BINGO! You won!</div>
   </div>
   <div id="actions-board">
-    <ActionCard v-for='action in actions' :action='action' :key='action'/>
+    <ActionCard v-for='action in actions' :isGameActive='isGameActive' :action='action' :key='action'/>
   </div>
 </span>
 </template>
@@ -274,6 +274,10 @@ export default {
   justify-content: space-between;
 }
 
+#play-btn {
+  background-color: #fa820e;
+}
+
 .btn {
   width: 100%;
   height: 50px;
@@ -286,10 +290,6 @@ export default {
   grid-template-rows: repeat(4, 1fr);
   grid-column-gap: 10px;
   grid-row-gap: 10px;
-}
-
-.half {
-  width: 300px;
 }
 
 .bingo-ctr {

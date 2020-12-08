@@ -1,8 +1,8 @@
 <template>
   <div id='webcam-view'>
+    <div v-if='!isWebcamReady' id='webcam-loading-message'>Waiting on webcam...</div>
     <video id="webcam" ref='webcam' width='0' height='0' muted autoplay></video>
     <canvas id='canvas' ref='canvas' :width='width' :height='height'></canvas>
-    <!-- <button v-if='!isWebcamReady' id="webcam-button" @click='beginWebcamEnable'>Enable Webcam</button> -->
   </div>
 </template>
 
@@ -151,14 +151,21 @@ export default {
 </script>
 
 <style scoped>
+#webcam-view {
+  position: relative;
+}
 
-#webcam-button {
+#canvas {
+  border: 1px solid black;
+}
+
+#webcam-loading-message {
   position: absolute;
-  top: 115px;
-  left: 125px;
-  width: 100px;
-  height: 75px;
-  background-color: #fa820e;
+  top: 50%;
+  left: 30%;
+  color: grey;
+  font-size: 1.5rem;
+  font-weight: 700
 }
 
 </style>
