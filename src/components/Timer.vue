@@ -42,7 +42,8 @@ export default {
 .time-ctr {
   margin: 0;
   padding: 0;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 </style>

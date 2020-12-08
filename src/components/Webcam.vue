@@ -155,10 +155,6 @@ export default {
   position: relative;
 }
 
-#canvas {
-  border: 1px solid black;
-}
-
 #webcam-loading-message {
   position: absolute;
   top: 50%;

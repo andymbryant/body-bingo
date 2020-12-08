@@ -1,9 +1,15 @@
 <template>
-<span v-if='!loading'>
+<div id='board' v-if='!loading'>
   <div id="top">
-    <div>
+    <div id='content'>
+      <div class='title-ctr'>
+        <h1>Body Bingo</h1>
+        <h3><em>Let's throw some shapes!</em></h3>
+        <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
+          But don't use your mouse, move your body!</p>
+      </div>
       <div id='controls'>
-        <button id='play-btn' v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
+        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
         <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
@@ -27,7 +33,7 @@
   <div id="actions-board">
     <ActionCard v-for='action in actions' :isGameActive='isGameActive' :action='action' :key='action'/>
   </div>
-</span>
+</div>
 </template>
 
 <script>
@@ -256,21 +262,38 @@ export default {
 
 <style>
 
+#board {
+  border: 3px solid black;
+  width: 1000px;
+}
+
 #top {
   display: flex;
   justify-content: space-between;
+  border-bottom: 3px solid black;
+  height: 480px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #content {
-  text-align: left;
-  flex-direction: row;
+  width: 100%;
+  border-right: 3px solid black;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
+}
+
+.title-ctr {
+  text-align: left;
 }
 
 #controls {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -279,7 +302,7 @@ export default {
 }
 
 .btn {
-  width: 100%;
+  width: 150px;
   height: 50px;
   font-size: 1.2rem;
 }
