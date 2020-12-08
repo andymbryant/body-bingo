@@ -116,7 +116,7 @@ export default {
       // Draw video frame
       pose.keypoints.forEach((k) => {
         const color = colorKey[k.part] || 'grey';
-        if (k.score > 0.6 && k.part !== 'leftEye' && k.part !== 'rightEye') {
+        if (k.score > 0.5 && k.part !== 'leftEye' && k.part !== 'rightEye') {
           const { x, y } = k.position;
           this.ctx.save();
           this.ctx.beginPath();

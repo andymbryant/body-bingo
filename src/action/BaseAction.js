@@ -3,7 +3,7 @@ export default class BaseAction {
     this.name = data.name;
     this.partOneName = data.partOneName;
     this.partTwoName = data.partTwoName;
-    this.threshold = data.threshold || 30;
+    this.threshold = data.threshold || 40;
     this.isComplete = false;
     this.width = data.width;
     this.height = data.height;
@@ -48,14 +48,9 @@ export default class BaseAction {
 
   getDiff(pose) {
     // Get euclidian distance between parts
-    // const partOne = this.getPart(pose, this.partOneName);
-    // const partTwo = this.getPart(pose, this.partTwoName);
+
     if (!this.partOne) console.error(`You probably mispelled this: ${this.partOneName}`);
     if (!this.partTwo) console.error(`You probably mispelled this: ${this.partTwoName}`);
-    // If parts are on screen, don't consider them
-    if (this.partOneName === 'nose') {
-      console.log(`${this.partOne.position.x}, ${this.partOne.position.y}`);
-    }
     // if (!this.isPartVisible(partOne) || !this.isPartVisible(partTwo)) return null;
     const xDiff = this.partOne.position.x - this.partTwo.position.x;
     const yDiff = this.partOne.position.y - this.partTwo.position.y;

@@ -7,9 +7,11 @@
         <h3><em>Let's throw some shapes!</em></h3>
         <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
           But don't use your mouse, move your body!</p>
+        <p>For best results, sit in a well-lit area and get about five feet away from the camera.</p>
+        <p>When you're ready to start, click play!</p>
       </div>
       <div id='controls'>
-        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn' @click='play'>Play</button>
+        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn play-btn' @click='play'>Play</button>
         <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
@@ -144,6 +146,7 @@ export default {
   },
   computed: {
     actionData() {
+      const high = 60;
       const actionData = [
         {
           name: 'Touch Right Wrist to Right Ear',
@@ -173,19 +176,21 @@ export default {
           name: 'Touch Left Wrist to Right Elbow',
           partOneName: 'leftWrist',
           partTwoName: 'rightElbow',
+          threshold: high,
           actionType: 'connect',
         },
         {
           name: 'Touch Right Wrist to Left Elbow',
           partOneName: 'rightWrist',
           partTwoName: 'leftElbow',
+          threshold: high,
           actionType: 'connect',
         },
         {
           name: 'Touch Wrists Together',
           partOneName: 'rightWrist',
           partTwoName: 'leftWrist',
-          threshold: 10,
+          threshold: 15,
           actionType: 'connect',
         },
         {
@@ -234,12 +239,14 @@ export default {
           name: 'Dab with Right Arm',
           partOneName: 'rightElbow',
           partTwoName: 'nose',
+          threshold: high,
           actionType: 'connect',
         },
         {
           name: 'Dab with Left Arm',
           partOneName: 'leftElbow',
           partTwoName: 'nose',
+          threshold: high,
           actionType: 'connect',
         },
       ];
@@ -293,15 +300,15 @@ export default {
   justify-content: space-between;
 }
 
-#play-btn {
-  background-color: #fa820e;
-}
-
 .btn {
   width: 150px;
   height: 50px;
   font-size: 1.2rem;
   border: 3px solid black;
+}
+
+.play-btn {
+  background-color: rgb(243, 136, 136);
 }
 
 #webcam-view {
