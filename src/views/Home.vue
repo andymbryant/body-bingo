@@ -7,7 +7,7 @@
         <h3><em>Let's throw some shapes!</em></h3>
         <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
           But don't use your mouse, move your body!</p>
-        <p>For best results, sit in a well-lit area and get about five feet away from the camera.</p>
+        <p>For best results, sit about five feet away from the camera in a well-lit area.</p>
         <label for="model-select"><strong>Choose a model: </strong></label>
           <select name="model-select" v-model='modelType' id="model-select">
             <option value="low-model">Low Accuracy</option>
@@ -17,7 +17,7 @@
         <p>When you're ready to start, click play!</p>
       </div>
       <div id='controls'>
-        <button v-if='bingo()' class='btn' @click='reset'>New Game</button>
+        <button v-if='bingo()' class='btn reset-btn' @click='reset'>New Game</button>
         <button v-else-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn play-btn' @click='play'>Play</button>
         <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
@@ -316,15 +316,19 @@ export default {
   height: 50px;
   font-size: 1.2rem;
   border: 3px solid black;
+  transition: all 0.5s;
 }
 
 .play-btn {
-  transition: all 0.5s;
   background-color: rgb(243, 136, 136);
 }
 
 .play-btn:disabled {
   background-color: lightgrey;
+}
+
+.reset-btn {
+  background-color: lightgreen;
 }
 
 #webcam-view {
