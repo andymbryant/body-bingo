@@ -32,6 +32,11 @@ export default {
       type: Boolean,
       required: true,
     },
+    modelType: {
+      type: String,
+      required: false,
+      default: () => 'low-model',
+    },
   },
   data() {
     return {
@@ -39,6 +44,17 @@ export default {
       isWebcamReady: false,
       video: null,
       canvas: null,
+      highConfig: {
+        architecture: 'ResNet50',
+        outputStride: 32,
+        inputResolution: { width: this.width / 1.5, height: this.height / 1.5 },
+        quantBytes: 2,
+      },
+      lowConfig: {
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        inputResolution: { width: this.width / 2, height: this.height / 2 },
+      },
     };
   },
   methods: {
@@ -55,18 +71,9 @@ export default {
       }, 100);
     },
     async loadModel() {
-      const highSettings = {
-        architecture: 'ResNet50',
-        outputStride: 32,
-        inputResolution: { width: this.width / 2, height: this.height / 2 },
-        quantBytes: 2,
-      };
-      const lowSettings = {
-        architecture: 'MobileNetV1',
-        outputStride: 16,
-        inputResolution: { width: this.width / 1.5, height: this.height / 1.5 },
-      };
-      model = await posenet.load(lowSettings);
+      this.$emit('update-model-ready', false);
+      const config = this.modelType === 'low-model' ? this.lowConfig : this.highConfig;
+      model = await posenet.load(this.config);
       this.$emit('update-model-ready', true);
     },
     async estimatePoseOnImage(element) {
@@ -138,6 +145,15 @@ export default {
       }
       window.requestAnimationFrame(this.predict);
     },
+  },
+  watch: {
+    modelType: {
+      handler() {
+        this.loadModel();
+      },
+      immediate: true,
+    },
+
   },
   created() {
     this.loading = true;

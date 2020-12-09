@@ -8,6 +8,12 @@
         <p>To win the game, you must fill an entire row or a column of cards on the board (no diagonals).
           But don't use your mouse, move your body!</p>
         <p>For best results, sit in a well-lit area and get about five feet away from the camera.</p>
+        <label for="model-select"><strong>Choose a model: </strong></label>
+          <select name="model-select" v-model='modelType' id="model-select">
+            <option value="low-model">Low Accuracy</option>
+            <option value="high-model">High Accuracy</option>
+          </select>
+      <div id='model-loading-message'><em v-show='!isModelReady' >(loading...)</em></div>
         <p>When you're ready to start, click play!</p>
       </div>
       <div id='controls'>
@@ -16,7 +22,6 @@
         <button v-else class='btn' @click='reset'>New Game</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
       </div>
-      <div v-if='!isModelReady'>(loading model...)</div>
     </div>
     <div id='webcam-view'>
       <div v-if='!isWebcamReady' id='webcam-loading-message'>Waiting on webcam...</div>
@@ -25,6 +30,7 @@
           ref='webcam'
           :width='width'
           :height='height'
+          :modelType='modelType'
           @update-model-ready='updateModelReady'
           :isGamePaused='isGamePaused'
           :isGameActive='isGameActive'
@@ -63,6 +69,7 @@ export default {
       isWebcamReady: false,
       isModelReady: false,
       actions: [],
+      modelType: 'high-model',
       width: 640,
       height: 480,
     };
@@ -295,7 +302,6 @@ export default {
 
 #controls {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
@@ -322,6 +328,10 @@ export default {
   color: grey;
   font-size: 1.5rem;
   font-weight: 700
+}
+
+#model-loading-message {
+  height: 20px;
 }
 
 #bingo-message {
