@@ -314,7 +314,12 @@ export default {
 }
 
 .play-btn {
+  transition: all 0.5s;
   background-color: rgb(243, 136, 136);
+}
+
+.play-btn:disabled {
+  background-color: lightgrey;
 }
 
 #webcam-view {

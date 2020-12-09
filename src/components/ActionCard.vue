@@ -81,7 +81,7 @@ export default {
 
     padding: 0.5rem;
     transition: all 0.5s;
-    /* filter:blur(5px) */
+    filter:blur(5px)
   }
   .active {
     filter: none;

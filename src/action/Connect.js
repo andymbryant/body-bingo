@@ -5,7 +5,7 @@ export default class Connect extends BaseAction {
     if (this.isComplete) return;
     this.partOne = this.getPart(pose, this.partOneName);
     this.partTwo = this.getPart(pose, this.partTwoName);
-    const scoreThreshold = 0.5;
+    const scoreThreshold = 0.4;
     if (this.partOne.score <= scoreThreshold || this.partTwo.score <= scoreThreshold) return;
     const diff = this.getDiff(pose);
     if (diff && diff < this.threshold) {
