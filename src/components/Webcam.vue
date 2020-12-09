@@ -6,11 +6,13 @@
 <script>
 /* eslint-disable prefer-const */
 import * as tf from '@tensorflow/tfjs';
+import * as tmPose from '@teachablemachine/pose';
 import colorKey from '@/colorKey';
 
 const posenet = require('@tensorflow-models/posenet');
 
 let model = null;
+let poseModel = null;
 
 export default {
   name: 'Webcam',
@@ -74,6 +76,15 @@ export default {
       this.$emit('update-model-ready', false);
       const config = this.modelType === 'low-model' ? this.lowConfig : this.highConfig;
       model = await posenet.load(this.config);
+      // const weights = await this.getWeights();
+      // console.log(weights);
+      // const URL = 'https://teachablemachine.withgoogle.com/models/BNsfS7AVC/';
+      // const modelURL = `${URL}model.json`;
+      // const modelURL = 'model.json';
+      // const metadataURL = 'metadata.json';
+      // const metadataURL = `${URL}metadata.json`;
+      // poseModel = await tmPose.loadFromFiles(modelURL, metadataURL);
+      poseModel = await tf.loadLayersModel('model.json');
       this.$emit('update-model-ready', true);
     },
     async estimatePoseOnImage(element) {
@@ -135,9 +146,61 @@ export default {
         }
       });
     },
+    preprocess(img) {
+      let tensor = tf.browser.fromPixels(img, 1).toFloat();
+
+      const offset = tf.scalar(127.5);
+      // Normalize the image
+      const normalized = tensor.sub(offset).div(offset);
+
+      // We add a dimension to get a batch shape [1,224,224,3]
+      const batched = normalized;
+      // const batched = normalized.expandDims(0);
+      return batched;
+    },
     async predict() {
       const input = tf.browser.fromPixels(this.video);
       const pose = await this.estimatePoseOnImage(input);
+      // const { posenetOutput } = await poseModel.estimatePose(this.video);
+      // let next = tf.browser.fromPixels(this.video)
+      //   .mean(2)
+      //   .toFloat()
+      //   .expandDims(-1);
+      // next = input;
+      // next = tf.image.resizeNearestNeighbor(next, [14739]);
+      let next = this.preprocess(this.video);
+      // next = next.reshape([247, 247]);
+      // console.log(next);
+      // next = tf.reshape(next, shape=)
+      // next = tf.image.resizeBilinear(next, [1474000]);
+      // next = tf.expandDims(next, -1);
+      // next = tf.reshape(next, [14739]);
+      // next = next.squeeze(2);
+      // next = next.reshape([257, 257]);
+      // console.log(poseModel.summary());
+      // next = next.slice([14739]);
+      // next = tf.expandDims(next, 0);
+      // next = input.resizeBilinear([14739]);
+      // next = next.mean(2);
+      // next = tf.expandDims(next, 0);
+      // next = tf.transpose(next);
+
+      // next = next.flatten();
+      // next = tf.transpose(next, tf.concat([[1, 0], tf.range(2, tf.rank(next))], 0));
+
+      // next = await tf.reshape([1, 14739, 3]);
+      next = tf.image.resizeBilinear(next, [1, 14739]);
+      // next = tf.squeeze(next);
+      next = tf.squeeze(next);
+      next = tf.expandDims(next, 0);
+      // next = tf.reshape(input, [1, 14739]);
+      // next = next.slice([0, 0], [1, 14739]);
+
+      // let next = input.resizeBilinear([257, 257]);
+      // next = tf.slice(input, [0, 14739]);
+      // poseModel.add(tf.layers.inputLayer({ inputShape: [640] }));
+      const prediction = await poseModel.predict(next);
+      console.log(prediction.dataSync());
       this.drawVideoOnCanvas();
       await this.drawPose(pose);
       if (!this.isGamePaused && this.isGameActive) {
