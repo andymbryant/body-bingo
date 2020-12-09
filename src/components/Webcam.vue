@@ -46,7 +46,7 @@ export default {
       canvas: null,
       highConfig: {
         architecture: 'ResNet50',
-        outputStride: 32,
+        outputStride: 8,
         inputResolution: { width: this.width / 1.5, height: this.height / 1.5 },
         quantBytes: 2,
       },
