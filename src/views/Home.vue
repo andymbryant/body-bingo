@@ -17,9 +17,9 @@
         <p>When you're ready to start, click play!</p>
       </div>
       <div id='controls'>
-        <button v-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn play-btn' @click='play'>Play</button>
-        <button v-else-if='!isGameOver' :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
-        <button v-else class='btn' @click='reset'>New Game</button>
+        <button v-if='bingo()' class='btn' @click='reset'>New Game</button>
+        <button v-else-if='isGamePaused || !isGameActive' :disabled='!isWebcamReady' class='btn play-btn' @click='play'>Play</button>
+        <button v-else :disabled='!isWebcamReady' class='btn' @click='pause'>Pause</button>
         <Timer :isGamePaused='isGamePaused' :isGameOver='isGameOver' ref='timer'/>
       </div>
     </div>
@@ -84,10 +84,13 @@ export default {
       setTimeout(() => {
         this.isGamePaused = false;
         this.isGameActive = false;
+        this.$refs.timer.reset();
       }, 100);
+      this.actions = [];
       this.getActions()
         .then((actions) => actions.forEach((a) => this.actions.push(a)));
       // reset timer, reset board, etc.
+      // this.$refs.timer.reset();
     },
     async getActions() {
       const actions = this.actionData.map((d) => {
@@ -143,11 +146,13 @@ export default {
         [3, 7, 11, 15],
       ];
       const actionIsComplete = (index) => this.actions[index].isComplete;
-      wins.forEach((win) => {
-        if (win.every(actionIsComplete)) {
-          flag = true;
-        }
-      });
+      if (this.actions.length) {
+        wins.forEach((win) => {
+          if (win.every(actionIsComplete)) {
+            flag = true;
+          }
+        });
+      }
       return flag;
     },
   },

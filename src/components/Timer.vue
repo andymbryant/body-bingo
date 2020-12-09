@@ -33,6 +33,12 @@ export default {
       }
       this.intervalFn = window.setInterval(this.incrementSeconds, 1000);
     },
+    reset() {
+      if (this.intervalFn) {
+        window.clearInterval(this.intervalFn);
+      }
+      this.seconds = 0;
+    },
   },
 };
 </script>
