@@ -47,8 +47,8 @@ export default {
       highConfig: {
         architecture: 'ResNet50',
         outputStride: 8,
-        inputResolution: { width: this.width / 1.5, height: this.height / 1.5 },
-        quantBytes: 2,
+        inputResolution: { width: this.width, height: this.height },
+        quantBytes: 4,
       },
       lowConfig: {
         architecture: 'MobileNetV1',

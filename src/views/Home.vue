@@ -43,6 +43,7 @@
     <ActionCard v-for='action in actions' :isGameActive='isGameActive' :action='action' :key='action'/>
   </div>
 </div>
+<div class='copyright'>© 2020 Andy Bryant - <a href="https://github.com/andymbryant/body-bingo" target='_blank'>Github</a></div>
 </template>
 
 <script>
@@ -378,6 +379,12 @@ export default {
   font-weight: 700;
   font-size: 1.2rem;
   color: #fa820e;
+}
+
+.copyright {
+  font-size: 12px;
+  margin-top: 1rem;
+  left: 50%;
 }
 
 </style>
