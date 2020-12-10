@@ -3,6 +3,8 @@ This is a game that you play with your body! All you need is a webcam and a good
 
 [Live link](https://www.bodybingo.net)
 
+## Project Overview
+I built this with Vue CLI, Tensorflow, and Tensorflow's PoseNet model.
 
 ## Project Setup
 If you want to play this game locally, you'll need to make sure that you have [npm](https://www.npmjs.com/get-npm) or [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable) installed.
