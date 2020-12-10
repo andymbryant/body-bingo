@@ -88,12 +88,12 @@ export default {
         this.$refs.timer.reset();
       }, 100);
       this.actions = [];
+      // Get actions and load them
       this.getActions()
         .then((actions) => actions.forEach((a) => this.actions.push(a)));
-      // reset timer, reset board, etc.
-      // this.$refs.timer.reset();
     },
     async getActions() {
+      // Creates actions from the actions data
       const actions = this.actionData.map((d) => {
         const data = d;
         data.width = this.width;
@@ -101,7 +101,7 @@ export default {
         if (data.actionType === 'connect') {
           return new Connect(data);
         }
-        // Add different kinds, like separate and maybe position
+        // TODO: Add different kinds, like separate and maybe position
         return new Connect(data);
       });
       return shuffle(actions);
@@ -125,13 +125,13 @@ export default {
     },
     updatePose(pose) {
       // Only select those actions that are associated with parts of the body included in the pose
-      // const actions = this.actions.filter((a) => (pose.keypoints.map((k) => k.part).includes(a)));
       this.actions.forEach((a) => a.testPose(pose));
       if (this.bingo()) {
         this.isGameOver = true;
         this.isGameActive = false;
       }
     },
+    // This determines if the user has bingo, based on board position
     bingo() {
       let flag = false;
       const wins = [
@@ -146,7 +146,9 @@ export default {
         [2, 6, 10, 14],
         [3, 7, 11, 15],
       ];
+      // Condition for if an action is complete
       const actionIsComplete = (index) => this.actions[index].isComplete;
+      // Check that all actions are complete based on indices in the wins data
       if (this.actions.length) {
         wins.forEach((win) => {
           if (win.every(actionIsComplete)) {

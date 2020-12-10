@@ -1,5 +1,6 @@
 import BaseAction from './BaseAction';
 
+// This action is for when two parts Connect
 export default class Connect extends BaseAction {
   testPose(pose) {
     if (this.isComplete) return;

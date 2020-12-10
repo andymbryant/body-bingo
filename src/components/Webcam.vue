@@ -10,6 +10,7 @@ import colorKey from '@/colorKey';
 
 const posenet = require('@tensorflow-models/posenet');
 
+// Model must be loaded into global variable - standard data variables didn't work for some reason
 let model = null;
 
 export default {
@@ -64,6 +65,7 @@ export default {
       await this.beginWebcamEnable();
     },
     async bindVideo() {
+      // Make sure video and refs are bound before action loop begins
       setTimeout(() => {
         this.video = this.$refs.webcam;
         this.canvas = this.$refs.canvas;
@@ -119,8 +121,8 @@ export default {
       this.ctx.restore();
     },
     async drawPose(pose) {
-      // Clear previos frame
       // Draw video frame
+      // Loop through all keypoints, assign a color, and filter out low-scoring ones and eyes
       pose.keypoints.forEach((k) => {
         const color = colorKey[k.part] || 'grey';
         if (k.score > 0.5 && k.part !== 'leftEye' && k.part !== 'rightEye') {
@@ -135,14 +137,21 @@ export default {
         }
       });
     },
+    // Heart of the action loop
     async predict() {
+      // Get tensor from browser input
       const input = tf.browser.fromPixels(this.video);
+      // Use model to get prediction
       const pose = await this.estimatePoseOnImage(input);
+      // Draw the video to the canvas element
       this.drawVideoOnCanvas();
+      // Draw the pose
       await this.drawPose(pose);
+      // If game is being played, update pose
       if (!this.isGamePaused && this.isGameActive) {
         this.$emit('update-pose', pose);
       }
+      // Continue loop
       window.requestAnimationFrame(this.predict);
     },
   },

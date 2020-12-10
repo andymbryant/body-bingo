@@ -1,3 +1,6 @@
+// All actions inherit from this base action
+// It represents how two parts are associated with each other
+
 export default class BaseAction {
   constructor(data) {
     this.name = data.name;
